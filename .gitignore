@@ -53,3 +53,12 @@ dkms.conf
 
 # debug information files
 *.dwo
+
+#custom
+*test*
+temp*
+philo
+philo.tsan
+*.py
+deposit*
+*.json
