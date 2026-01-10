@@ -6,7 +6,7 @@
 #include <pthread.h>
 #include <sys/time.h>
 
-#define PHILOS_MAX 200
+#define PHILOS_MAX 201
 #define C_RESET "\033[0m"
 
 typedef struct s_philo

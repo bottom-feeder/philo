@@ -6,7 +6,7 @@
 /*   By: ikiriush <ikiriush@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/11/04 22:36:51 by ikiriush          #+#    #+#             */
-/*   Updated: 2026/01/08 02:43:18 by ikiriush         ###   ########.fr       */
+/*   Updated: 2026/01/10 18:29:16 by ikiriush         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -47,17 +47,18 @@ void *monitor(void *arg)
 		if (program->philos[i].stopped == 0
 			&& (poll_death(&program->philos[i]) == 0)
 				&& (get_current_time() - program->philos[i].last_meal
-					>= program->philos[i].time_to_die))
+					> program->philos[i].time_to_die))
 		{
 			pthread_mutex_unlock(&program->last_meal_lock);
 			announce_death(&program->philos[i]);
 			pthread_mutex_lock(program->philos[i].write_lock);
-			//printf("%s%d write locked [Monitor]%s\n", philo_color(program->philos[i].id), program->philos[i].id, C_RESET);
+			printf("%s%zu %d write locked [Monitor]%s\n", philo_color(program->philos[i].id), get_current_time() - program->philos[i].start_time, program->philos[i].id, C_RESET);//
 			pthread_mutex_lock(program->philos[i].death_lock);
-			printf("%s%zu %d died at %zu%s\n", philo_color(program->philos[i].id), get_current_time() - program->philos[i].start_time, program->philos[i].id, program->philos[i].time_died, C_RESET);
+			printf("%s%zu %d died at %zu bc last meal time %zu is more than limit %zu%s\n", philo_color(program->philos[i].id), get_current_time() - program->philos[i].start_time, program->philos[i].id, program->philos[i].time_died, program->philos[i].last_meal - program->philos[i].start_time, program->philos[i].time_to_die, C_RESET);//
+			printf("%zu %d died\n", get_current_time() - program->philos[i].start_time, program->philos[i].id);
 			pthread_mutex_unlock(program->philos[i].death_lock);
+			printf("%s%zu %d write unlocked [Monitor]%s\n", philo_color(program->philos[i].id), get_current_time() - program->philos[i].start_time, program->philos[i].id, C_RESET);//
 			pthread_mutex_unlock(program->philos[i].write_lock);
-			//printf("%s%d write unlocked [Monitor]%s\n", philo_color(program->philos[i].id), program->philos[i].id, C_RESET);
 			return (NULL);
 		}
 		pthread_mutex_unlock(&program->last_meal_lock);
@@ -70,7 +71,11 @@ void *monitor(void *arg)
 			{
 				pthread_mutex_unlock(&program->last_meal_lock);
 				announce_death(&program->philos[i]);
-				//printf("All has eaten, exiting...\n");
+				pthread_mutex_lock(program->philos[i].write_lock);
+				printf("%s%zu %d write locked [Monitor]%s\n", philo_color(program->philos[i].id), get_current_time() - program->philos[i].start_time, program->philos[i].id, C_RESET);//
+				printf("All has eaten, exiting...\n");//
+				printf("%s%zu %d write unlocked [Monitor]%s\n", philo_color(program->philos[i].id), get_current_time() - program->philos[i].start_time, program->philos[i].id, C_RESET);//
+				pthread_mutex_unlock(program->philos[i].write_lock);
 				return (NULL);
 			}
 		}
