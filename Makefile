@@ -1,11 +1,10 @@
 # === Variables ===
-#CFLAGS  = -Wall -Wextra -Werror -g -O1 -fno-omit-frame-pointer -pthread -fsanitize=thread
 CFLAGS  = -Wall -Wextra -Werror -pthread -g
-#TSAN_OPTIONS="verbosity=1" setarch "$(uname -m)" -R ./philo [args]
 
 NAME    = philo
 
 SRCS    = error_cleanup.c \
+          forks.c \
           init.c \
           main.c \
           routines.c \

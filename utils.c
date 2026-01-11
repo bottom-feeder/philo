@@ -6,7 +6,7 @@
 /*   By: ikiriush <ikiriush@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/10/01 23:16:13 by ikiriush          #+#    #+#             */
-/*   Updated: 2026/01/11 17:25:24 by ikiriush         ###   ########.fr       */
+/*   Updated: 2026/01/11 22:10:37 by ikiriush         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -15,7 +15,7 @@
 int	ft_strlen(char *str)
 {
 	int	i;
-	int ctr;
+	int	ctr;
 
 	i = 0;
 	ctr = 0;
@@ -29,28 +29,26 @@ int	ft_strlen(char *str)
 	return (ctr);
 }
 
-size_t	get_current_time(void)
+size_t	gct(void)
 {
 	struct timeval	time;
+
 	if (gettimeofday(&time, NULL) == -1)
 		write(2, "gettimeofday() error\n", 21);
-	return	(time.tv_sec * 1000 + time.tv_usec / 1000);
+	return (time.tv_sec * 1000 + time.tv_usec / 1000);
 }
 
-int ft_usleep(size_t ms, t_philo *philo)
-{	
+int	ft_usleep(size_t ms, t_philo *ph)
+{
 	size_t	start;
 
-//	printf("Started ft_usleep\n"); //debug
-	start = get_current_time();
-	while (get_current_time() - start < ms)
+	start = gct();
+	while (gct() - start < ms)
 	{
-		if (poll_death(philo))
+		if (poll_death(ph))
 			return (1);
-		usleep(500);
+		usleep(1000);
 	}
-//	printf("Ended ft_usleep\n"); //debug
-//	printf("slept: %zu ms\n", get_current_time() - start); //debug
 	return (0);
 }
 
@@ -90,6 +88,3 @@ int	ft_safe_atoi(char *str)
 		return (-1);
 	return (res);
 }
-
-
-

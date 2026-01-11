@@ -6,68 +6,69 @@
 /*   By: ikiriush <ikiriush@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/11/04 22:36:51 by ikiriush          #+#    #+#             */
-/*   Updated: 2026/01/11 17:29:16 by ikiriush         ###   ########.fr       */
+/*   Updated: 2026/01/11 21:12:50 by ikiriush         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "philo.h"
 
+static void	print_death(t_program *pr, int i)
+{
+	pthread_mutex_unlock(&pr->l_meal_lock);
+	announce_death(&pr->phs[i]);
+	pthread_mutex_lock(pr->phs[i].wlck);
+	pthread_mutex_lock(pr->phs[i].dlck);
+	printf("%zu %d died\n", gct() - pr->phs[i].start_time, pr->phs[i].id);
+	pthread_mutex_unlock(pr->phs[i].dlck);
+	pthread_mutex_unlock(pr->phs[i].wlck);
+}
 
-
-int poll_death(t_philo *philo)
+int	poll_death(t_philo *ph)
 {
 	int	d;
 
-	pthread_mutex_lock(philo->death_lock);
-	d = *philo->dead;
-	pthread_mutex_unlock(philo->death_lock);
+	pthread_mutex_lock(ph->dlck);
+	d = *ph->dead;
+	pthread_mutex_unlock(ph->dlck);
 	return (d);
 }
 
-void announce_death(t_philo *philo)
+void	announce_death(t_philo *ph)
 {
-	pthread_mutex_lock(philo->death_lock);
-	*philo->dead = 1;
-	pthread_mutex_unlock(philo->death_lock);
+	pthread_mutex_lock(ph->dlck);
+	*ph->dead = 1;
+	pthread_mutex_unlock(ph->dlck);
 }
 
-void *monitor(void *arg)
+static void	all_eaten(t_program *pr, int i)
 {
-	t_program	*program;
+	pthread_mutex_unlock(&pr->l_meal_lock);
+	announce_death(&pr->phs[i]);
+}
+
+void	*monitor(void *arg)
+{
+	t_program	*pr;
 	int			ctr;
 	int			i;
 
-	program = arg;
+	pr = arg;
 	i = 0;
 	ctr = 0;
-	while(poll_death(&program->philos[i]) == 0)
+	while (poll_death(&pr->phs[i]) == 0)
 	{
-		pthread_mutex_lock(&program->last_meal_lock);
-		if ((get_current_time() - program->philos[i].last_meal > program->philos[i].time_to_die) && program->philos[i].stopped == 0)
-		{
-			pthread_mutex_unlock(&program->last_meal_lock);
-			announce_death(&program->philos[i]);
-			pthread_mutex_lock(program->philos[i].write_lock);
-			pthread_mutex_lock(program->philos[i].death_lock);
-			printf("%zu %d died\n", get_current_time() - program->philos[i].start_time, program->philos[i].id);
-			pthread_mutex_unlock(program->philos[i].death_lock);
-			pthread_mutex_unlock(program->philos[i].write_lock);
-			return (NULL);
-		}
-		if (program->philos[i].stopped == 1)
+		pthread_mutex_lock(&pr->l_meal_lock);
+		if ((gct() - pr->phs[i].l_meal > pr->phs[i].t2d) && (!pr->phs[i].stop))
+			return (print_death(pr, i), NULL);
+		if (pr->phs[i].stop == 1)
 		{
 			ctr++;
-			program->philos[i].stopped = -1;
-			if (ctr > 0 && ctr == program->num_of_philos)
-			{
-				pthread_mutex_unlock(&program->last_meal_lock);
-				announce_death(&program->philos[i]);
-				return (NULL);
-			}
+			pr->phs[i].stop = -1;
+			if (ctr > 0 && ctr == pr->num_of_phs)
+				return (all_eaten(pr, i), NULL);
 		}
-		pthread_mutex_unlock(&program->last_meal_lock);
-		i++;
-		if (i == program->num_of_philos)
+		pthread_mutex_unlock(&pr->l_meal_lock);
+		if (++i == pr->num_of_phs)
 			i = 0;
 		usleep(300);
 	}
