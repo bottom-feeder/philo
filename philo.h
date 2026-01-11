@@ -35,6 +35,7 @@ typedef struct s_program
 {
 	int				num_of_philos;
 	int				death_flag;
+	size_t			start_time;
 	pthread_mutex_t	death_lock;
 	pthread_mutex_t	last_meal_lock;
 	pthread_mutex_t	write_lock;
@@ -61,6 +62,7 @@ void	joiner(t_program* program, int started);
 void	*monitor(void *arg);
 void	*philo_routine(void *arg);
 int		sleep_routine(t_philo *philo);
-void	think_routine(t_philo *philo);
+int		think_routine(t_philo *philo);
 const char	*philo_color(int id);
+
 #endif

@@ -62,3 +62,4 @@ philo.tsan
 *.py
 deposit*
 *.json
+*.txt

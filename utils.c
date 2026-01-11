@@ -6,7 +6,7 @@
 /*   By: ikiriush <ikiriush@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/10/01 23:16:13 by ikiriush          #+#    #+#             */
-/*   Updated: 2026/01/10 18:27:28 by ikiriush         ###   ########.fr       */
+/*   Updated: 2026/01/11 17:25:24 by ikiriush         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -43,11 +43,14 @@ int ft_usleep(size_t ms, t_philo *philo)
 
 //	printf("Started ft_usleep\n"); //debug
 	start = get_current_time();
-	while ((poll_death(philo) == 0) && (get_current_time() - start < ms))
-		usleep(100);
-	if (poll_death(philo) == 1)
-		return (announce_death(philo), 1);
+	while (get_current_time() - start < ms)
+	{
+		if (poll_death(philo))
+			return (1);
+		usleep(500);
+	}
 //	printf("Ended ft_usleep\n"); //debug
+//	printf("slept: %zu ms\n", get_current_time() - start); //debug
 	return (0);
 }
 

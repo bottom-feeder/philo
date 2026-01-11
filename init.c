@@ -6,7 +6,7 @@
 /*   By: ikiriush <ikiriush@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/10/03 22:52:25 by ikiriush          #+#    #+#             */
-/*   Updated: 2026/01/10 18:27:28 by ikiriush         ###   ########.fr       */
+/*   Updated: 2026/01/11 19:24:56 by ikiriush         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -20,9 +20,6 @@ void init_fork_mutexes(t_program* program)
 	while (i < program->num_of_philos)
 	{
 		pthread_mutex_init(&(program->forks)[i], NULL);
-//		pthread_mutex_lock(program->philos[i].write_lock); //debug
-//		printf("Fork #%d was initialized with address %p\n", i + 1, &program->forks[i]); //debug
-//		pthread_mutex_unlock(program->philos[i].write_lock); //debug
 		i++;
 	}
 }
@@ -44,14 +41,16 @@ void	init_philos(int ac, char** av, t_philo *philos, t_program *program)
 	int	i;
 	
 	i = 0;
+		
+	program->start_time = get_current_time();
 	while (i <= ft_safe_atoi(av[1]))
 	{
 		philos[i].id = i + 1;
 		init_inputs(ac, av, program, i);
 		philos[i].stopped = 0;
 		philos[i].meals_eaten = 0;
-		philos[i].start_time = get_current_time();
-		philos[i].last_meal = get_current_time();
+		philos[i].start_time = program->start_time;
+		philos[i].last_meal = program->start_time;
 		philos[i].write_lock = &program->write_lock;
 		philos[i].death_lock = &program->death_lock;
 		philos[i].last_meal_lock = &program->last_meal_lock;
@@ -93,13 +92,8 @@ int	init_threads(t_program *program)
 			destroyer("Pthread creation failed", program);
 			return (1);
 		}
-//		pthread_mutex_lock(program->philos[i].write_lock); //debug
-//		printf("%zu Thread ID = %lu has launched\n", get_current_time() - program->philos[i].start_time, (unsigned long)program->philos[i].thread); //debug
 		started++;
-//		printf("started value = %d\n", started); //debug
 		i++;
-//		printf("i = %d\n", i); //debug
-//		pthread_mutex_unlock(program->philos[i].write_lock); //debug
 	}
 	if (pthread_create(&program->philos[i].thread, NULL, monitor, program))
 	{
@@ -108,9 +102,5 @@ int	init_threads(t_program *program)
 		destroyer("Pthread creation failed", program);
 		return (1);
 	}
-//	pthread_mutex_lock(program->philos[i].write_lock); //debug
-//	printf("%zu Monitor Thread ID = %lu has launched\n", get_current_time() - program->philos[i].start_time, (unsigned long)program->philos[i].thread); //debug
-//	printf("started value = %d\n", started); //debug
-//	pthread_mutex_unlock(program->philos[i].write_lock); //debug
 	return (0);
 }
