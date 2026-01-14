@@ -16,11 +16,11 @@ static void	print_death(t_program *pr, int i)
 {
 	pthread_mutex_unlock(&pr->l_meal_lock);
 	announce_death(&pr->phs[i]);
-	pthread_mutex_lock(pr->phs[i].wlck);
 	pthread_mutex_lock(pr->phs[i].dlck);
+	pthread_mutex_lock(pr->phs[i].wlck);
 	printf("%zu %d died\n", gct() - pr->phs[i].start_time, pr->phs[i].id);
-	pthread_mutex_unlock(pr->phs[i].dlck);
 	pthread_mutex_unlock(pr->phs[i].wlck);
+	pthread_mutex_unlock(pr->phs[i].dlck);
 }
 
 int	poll_death(t_philo *ph)
@@ -58,7 +58,7 @@ void	*monitor(void *arg)
 	while (poll_death(&pr->phs[i]) == 0)
 	{
 		pthread_mutex_lock(&pr->l_meal_lock);
-		if ((gct() - pr->phs[i].l_meal > pr->phs[i].t2d) && (!pr->phs[i].stop))
+		if ((gct() - pr->phs[i].l_meal >= pr->phs[i].t2d) && (!pr->phs[i].stop))
 			return (print_death(pr, i), NULL);
 		if (pr->phs[i].stop == 1)
 		{

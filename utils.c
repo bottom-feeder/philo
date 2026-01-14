@@ -47,7 +47,7 @@ int	ft_usleep(size_t ms, t_philo *ph)
 	{
 		if (poll_death(ph))
 			return (1);
-		usleep(1000);
+		usleep(500);
 	}
 	return (0);
 }
