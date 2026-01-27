@@ -6,7 +6,7 @@
 /*   By: ikiriush <ikiriush@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/11/05 23:47:50 by ikiriush          #+#    #+#             */
-/*   Updated: 2026/01/11 21:14:17 by ikiriush         ###   ########.fr       */
+/*   Updated: 2026/01/16 01:10:11 by ikiriush         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -59,7 +59,7 @@ void	destroyer(char *string, t_program *program)
 	if (string)
 		write(2, string, ft_strlen(string));
 	pthread_mutex_destroy(&program->dlck);
-	pthread_mutex_destroy(&program->l_meal_lock);
+	pthread_mutex_destroy(&program->mlck);
 	pthread_mutex_destroy(&program->wlck);
 	i = 0;
 	n = program->num_of_phs;

@@ -1,5 +1,6 @@
 # === Variables ===
 CFLAGS  = -Wall -Wextra -Werror -pthread -g
+#CFLAGS  = -Wall -Wextra -Werror -g -O0 -fno-omit-frame-pointer -pthread -fsanitize=thread
 
 NAME    = philo
 

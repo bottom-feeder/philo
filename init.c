@@ -6,7 +6,7 @@
 /*   By: ikiriush <ikiriush@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/10/03 22:52:25 by ikiriush          #+#    #+#             */
-/*   Updated: 2026/01/11 21:09:31 by ikiriush         ###   ########.fr       */
+/*   Updated: 2026/01/20 22:35:06 by ikiriush         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -41,25 +41,32 @@ void	init_philos(int ac, char **av, t_philo *phs, t_program *program)
 	int	i;
 
 	i = 0;
+	program->death_flag = 0;
+	pthread_mutex_init(&program->dlck, NULL);
+	pthread_mutex_init(&program->mlck, NULL);
+	pthread_mutex_init(&program->wlck, NULL);
+	program->num_of_phs = ft_safe_atoi(av[1]);
 	program->start_time = gct();
 	while (i <= ft_safe_atoi(av[1]))
 	{
 		phs[i].id = i + 1;
 		init_inputs(ac, av, program, i);
 		phs[i].stop = 0;
+		phs[i].eating = 0;
 		phs[i].meals_eaten = 0;
+		phs[i].l_first = 0;
 		phs[i].start_time = program->start_time;
 		phs[i].l_meal = program->start_time;
 		phs[i].wlck = &program->wlck;
 		phs[i].dlck = &program->dlck;
-		phs[i].l_meal_lock = &program->l_meal_lock;
+		phs[i].mlck = &program->mlck;
 		phs[i].dead = &program->death_flag;
 		phs[i].time_died = 0;
 		i++;
 	}
 }
 
-void	init_l_rfs(t_program *program)
+void	init_l_r_forks(t_program *program)
 {
 	int	i;
 

@@ -6,7 +6,7 @@
 /*   By: ikiriush <ikiriush@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2026/01/11 21:04:42 by ikiriush          #+#    #+#             */
-/*   Updated: 2026/01/11 21:09:09 by ikiriush         ###   ########.fr       */
+/*   Updated: 2026/01/21 01:24:26 by ikiriush         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -26,6 +26,8 @@ typedef struct s_philo
 	int				id;
 	int				stop;
 	int				meals_eaten;
+	int				l_first;
+	int				eating;
 	size_t			l_meal;
 	size_t			t2d;
 	size_t			t2e;
@@ -39,7 +41,7 @@ typedef struct s_philo
 	pthread_mutex_t	*lf;
 	pthread_mutex_t	*wlck;
 	pthread_mutex_t	*dlck;
-	pthread_mutex_t	*l_meal_lock;
+	pthread_mutex_t	*mlck;
 }					t_philo;
 
 typedef struct s_program
@@ -48,13 +50,14 @@ typedef struct s_program
 	int				death_flag;
 	size_t			start_time;
 	pthread_mutex_t	dlck;
-	pthread_mutex_t	l_meal_lock;
+	pthread_mutex_t	mlck;
 	pthread_mutex_t	wlck;
 	pthread_mutex_t	forks[PHILOS_MAX];
 	t_philo			phs[PHILOS_MAX];
 }					t_program;
 
 void	announce_death(t_philo *ph);
+int		check_starvation(t_philo *ph, size_t now);
 void	destroyer(char *string, t_program *program);
 int		eat_routine(t_philo *ph);
 int		error_handler(int ac, char **av);
@@ -64,7 +67,7 @@ int		ft_safe_atoi(char *str);
 int		ft_strlen(char *str);
 int		ft_usleep(size_t ms, t_philo *ph);
 size_t	gct(void);
-void	init_l_rfs(t_program *program);
+void	init_l_r_forks(t_program *program);
 void	init_fork_mutexes(t_program *program);
 void	init_philos(int ac, char **av, t_philo *phs, t_program *program);
 int		init_threads(t_program *pr);
