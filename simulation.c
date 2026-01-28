@@ -6,7 +6,7 @@
 /*   By: ikiriush <ikiriush@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/11/04 22:36:51 by ikiriush          #+#    #+#             */
-/*   Updated: 2026/01/27 06:12:35 by ikiriush         ###   ########.fr       */
+/*   Updated: 2026/01/28 08:50:40 by ikiriush         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -17,9 +17,9 @@ static void	print_death(t_program *pr, int i)
 	pthread_mutex_unlock(&pr->mlck);
 	announce_death(&pr->phs[i]);
 	pthread_mutex_lock(pr->phs[i].wlck);
-	//pthread_mutex_lock(pr->phs[i].dlck);
+	pthread_mutex_lock(pr->phs[i].dlck);
 	printf("%zu %d died\n", gct() - pr->phs[i].start_time, pr->phs[i].id);
-	//pthread_mutex_unlock(pr->phs[i].dlck);
+	pthread_mutex_unlock(pr->phs[i].dlck);
 	pthread_mutex_unlock(pr->phs[i].wlck);
 }
 
@@ -58,8 +58,7 @@ void	*monitor(void *arg)
 	while (poll_death(&pr->phs[i]) == 0)
 	{
 		pthread_mutex_lock(&pr->mlck);
-		// printf("Locked mlck for philo %d from monitor\n", pr->phs[i].id);
-		if ((gct() - pr->phs[i].l_meal >= pr->phs[i].t2d) && (pr->phs[i].stop == 0))
+		if ((gct() - pr->phs[i].l_meal > pr->phs[i].t2d) && (!pr->phs[i].stop))
 			return (print_death(pr, i), NULL);
 		if (pr->phs[i].stop == 1)
 		{

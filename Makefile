@@ -10,7 +10,8 @@ SRCS    = error_cleanup.c \
           main.c \
           routines.c \
           simulation.c \
-          utils.c
+          utils.c \
+          utils_starv_stagger.c
 
 OBJS    = $(SRCS:.c=.o)
 

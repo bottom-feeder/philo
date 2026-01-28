@@ -6,7 +6,7 @@
 /*   By: ikiriush <ikiriush@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/10/01 23:16:13 by ikiriush          #+#    #+#             */
-/*   Updated: 2026/01/26 19:10:19 by ikiriush         ###   ########.fr       */
+/*   Updated: 2026/01/28 04:23:23 by ikiriush         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -41,28 +41,21 @@ size_t	gct(void)
 int	ft_usleep(size_t ms, t_philo *ph)
 {
 	size_t	start;
+	size_t	remaining;
 
 	start = gct();
 	while (gct() - start < ms)
 	{
 		if (poll_death(ph))
 			return (1);
-		usleep(1000);
+		remaining = ms - (gct() - start);
+		if (remaining >= 2)
+			usleep(1000);
+		if (remaining < 2)
+			usleep(500);
 	}
 	return (0);
 }
-
-// int	ft_usleep(size_t ms)
-// {
-// 	size_t	start;
-
-// 	start = gct();
-// 	while (gct() - start < ms)
-// 	{
-// 		usleep(500);
-// 	}
-// 	return (0);
-// }
 
 int	ft_isdigit(int c)
 {

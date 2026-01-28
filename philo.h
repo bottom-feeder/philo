@@ -6,7 +6,7 @@
 /*   By: ikiriush <ikiriush@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2026/01/11 21:04:42 by ikiriush          #+#    #+#             */
-/*   Updated: 2026/01/21 01:24:26 by ikiriush         ###   ########.fr       */
+/*   Updated: 2026/01/28 08:14:41 by ikiriush         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -27,7 +27,6 @@ typedef struct s_philo
 	int				stop;
 	int				meals_eaten;
 	int				l_first;
-	int				eating;
 	size_t			l_meal;
 	size_t			t2d;
 	size_t			t2e;
@@ -75,9 +74,12 @@ int		poll_death(t_philo *ph);
 void	joiner(t_program *program, int started);
 void	*monitor(void *arg);
 void	*ph_routine(void *arg);
+void	put_down_forks(t_philo *ph);
 int		sleep_routine(t_philo *ph);
 int		take_1st_fork(t_philo *ph, int l_first);
 int		take_2nd_fork(t_philo *ph, int l_first);
 int		think_routine(t_philo *ph);
+int		thinking_stagger_even(t_philo *ph);
+int		thinking_stagger_odd(t_philo *ph);
 
 #endif

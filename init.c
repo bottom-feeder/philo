@@ -6,7 +6,7 @@
 /*   By: ikiriush <ikiriush@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/10/03 22:52:25 by ikiriush          #+#    #+#             */
-/*   Updated: 2026/01/20 22:35:06 by ikiriush         ###   ########.fr       */
+/*   Updated: 2026/01/27 19:48:11 by ikiriush         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -52,7 +52,6 @@ void	init_philos(int ac, char **av, t_philo *phs, t_program *program)
 		phs[i].id = i + 1;
 		init_inputs(ac, av, program, i);
 		phs[i].stop = 0;
-		phs[i].eating = 0;
 		phs[i].meals_eaten = 0;
 		phs[i].l_first = 0;
 		phs[i].start_time = program->start_time;
